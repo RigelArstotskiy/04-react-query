@@ -1,13 +1,13 @@
-//* 🔹 Imports
+//Import
 import styles from "./SearchBar.module.css";
 import toast from "react-hot-toast";
 
-//! 🔹 Interface
+//Interface
 interface OrderFormProps {
   onSubmit: (value: string) => void;
 }
 
-//! 🔹 SearchBar
+//SearchBar
 export default function SearchBar({ onSubmit }: OrderFormProps) {
   const handleSubmit = (formData: FormData) => {
     const query = formData.get("query") as string;
@@ -19,7 +19,7 @@ export default function SearchBar({ onSubmit }: OrderFormProps) {
     onSubmit(query);
   };
 
-  //! 🔹 Render
+  //Render
   return (
     <header className={styles.header}>
       <div className={styles.container}>

@@ -1,34 +1,48 @@
-//! 🔹 Imports
+//Import
 import axios from "axios";
 import type { Movie } from "../types/movie";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 
-//! 🔹 SecretKey
-const myKey = import.meta.env.VITE_TMDB_TOKEN;
+//SecretKey
+const myKey = import.meta.env.VITE_TMDB_API_KEY;
 
-//! 🔹 Interface
-interface MovieHttpProps {
+//TMDB Interface
+type MovieHttpProps = {
   results: Movie[];
-}
+  total_pages: number;
+};
 
-//! 🔹 Default Axios URL
-axios.defaults.baseURL = "https://api.themoviedb.org/3";
+//URL Axios
+axios.defaults.baseURL = "https://api.themoviedb.org/3/";
 
-//! 🔹 fetchMovies
-export const fetchMovies = async (query: string): Promise<Movie[]> => {
-  const options = {
-    params: { query: `${query}`, include_adult: false, api_key: myKey },
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      //Authorization: `Bearer ${myKey}`,
-    },
-  };
-
+//Fetch
+const fetchMovies = async (
+  query: string,
+  page: number
+): Promise<MovieHttpProps> => {
   try {
-    const response = await axios.get<MovieHttpProps>("search/movie", options);
-    return response.data.results;
+    const response = await axios.get<MovieHttpProps>("search/movie", {
+      params: {
+        api_key: myKey, //I use v3 API Key
+        query,
+        include_adult: false,
+        page,
+      },
+    });
+
+    return response.data;
   } catch (error) {
-    console.error("Error fetching movies");
+    console.error("Error fetching movies", error);
     throw error;
   }
+};
+
+//React Query
+export const useMovies = (query: string, currentPage: number) => {
+  return useQuery({
+    queryKey: ["movies", query, currentPage],
+    queryFn: () => fetchMovies(query, currentPage),
+    enabled: query !== "",
+    placeholderData: keepPreviousData,
+  });
 };

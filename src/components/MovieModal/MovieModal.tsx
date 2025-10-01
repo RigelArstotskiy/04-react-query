@@ -1,26 +1,25 @@
-//* 🔹 Imports
+//Import
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import css from "./MovieModal.module.css";
 import type { Movie } from "../../types/movie";
-//! --------------------------------------
 
-//! 🔹 Interface
+//Interface
 interface MovieModalProps {
   onClose: () => void;
   movie: Movie;
 }
 
-//! 🔹 MovieModal
+//MovieModal
 export default function MovieModal({ movie, onClose }: MovieModalProps) {
-  //! 🔹 Background closing
+  //Background closing
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
       onClose();
     }
   };
 
-  //! 🔹 Escape closing
+  //Escape closing
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -35,7 +34,7 @@ export default function MovieModal({ movie, onClose }: MovieModalProps) {
     };
   }, [onClose]);
 
-  //! 🔹 Render
+  //Render
   return createPortal(
     <div
       className={css.backdrop}
